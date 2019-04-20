@@ -1,0 +1,19 @@
+--CREATE RAID0
+sudo apt install mdadm
+sudo mdadm --create --verbose /dev/md0 --level=0 --raid-devices=3 /dev/sda /dev/sdb /dev/sdc
+sudo mkfs.ext4 -F /dev/md0
+sudo mkdir -p /mnt/md0
+sudo mount /dev/md0 /mnt/md0
+sudo mdadm --detail --scan | sudo tee -a /etc/mdadm/mdadm.conf
+sudo update-initramfs -u
+echo '/dev/md0 /mnt/md0 ext4 defaults,nofail,discard 0 0' | sudo tee -a /etc/fstab
+
+--SETUP NFS
+sudo apt-get install nfs-common nfs-server -y
+sudo chmod -R 777 /mnt/md0
+sudo vim /etc/exports
+--- add /mnt/md0 *(rw,sync)
+sudo exportfs
+sudo update-rc.d rpcbind enable
+sudo service rpcbind restart
+helm install --set nfs.server=192.168.1.112 --set image.repository=quay.io/external_storage/nfs-client-provisioner-arm --set nfs.path=/mnt/md0 stable/nfs-client-provisioner --name=nfs-client
