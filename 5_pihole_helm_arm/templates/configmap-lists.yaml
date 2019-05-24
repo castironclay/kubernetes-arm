@@ -9,6 +9,8 @@ metadata:
     release: {{ .Release.Name }}
 data:
   whitelist.txt: |
+    storage.googleapis.com
+    play.google.com
     0.client-channel.google.com
     0-edge-chat.facebook.com
     1drv.com

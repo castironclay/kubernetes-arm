@@ -8,7 +8,7 @@ persistence:
   ## persistence.enabled Enables persistent volume - PV provisioner support necessary
   enabled: true
   ## persistence.keep Keep persistent volume after helm delete
-  keep: false
+  keep: true
   ## persistence.accessMode PVC Access Mode
   accessMode: ReadWriteMany
   ## persistence.size PVC Size
